@@ -9,7 +9,7 @@ import androidx.room.TypeConverters;
 
 @Entity
 public class Bill {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     public int uid;
 
     @ColumnInfo(name = "date")
@@ -24,4 +24,18 @@ public class Bill {
 
     @ColumnInfo(name = "amount")
     public int amount;
+
+    public Bill(String category, String description, Date date, int amount) {
+        this.category = category;
+        this.date = date;
+        this.amount = amount;
+        this.description = description;
+    }
+
+    public Bill(){
+        this.date = new Date();
+        this.amount = 0;
+        this.description = "";
+        this.category = "General";
+    }
 }

@@ -47,4 +47,6 @@ dependencies {
 
     // Test helpers
     testImplementation "androidx.room:room-testing:$room_version"
+
+    implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
 }

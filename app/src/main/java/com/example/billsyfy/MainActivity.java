@@ -1,13 +1,21 @@
 package com.example.billsyfy;
 
+import android.app.Activity;
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.example.billsyfy.entities.AppDatabase;
+import com.example.billsyfy.entities.Bill;
+import com.example.billsyfy.entities.BillDao;
+import com.example.billsyfy.entities.DateTypeConverter;
+import com.example.billsyfy.ui.home.HomeFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import android.view.View;
 
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -19,14 +27,28 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.room.ColumnInfo;
 import androidx.room.Room;
+import androidx.room.TypeConverters;
+import lecho.lib.hellocharts.model.PieChartData;
+import lecho.lib.hellocharts.model.SliceValue;
+import lecho.lib.hellocharts.view.PieChartView;
 
 import android.view.Menu;
+import android.widget.Toast;
+
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
 
+    public static AppDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
+        this.db = Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class, "billsify").build();
     }
 
@@ -64,5 +86,112 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    public static class BillsInsertAsync extends AsyncTask<Void, Void, Integer> {
+
+        //Prevent leak
+        private WeakReference<Activity> weakActivity;
+        private Date date;
+        private String description;
+        private String category;
+        private int amount;
+
+        public BillsInsertAsync(Activity activity, String category, String description, int amount, Date date) {
+            weakActivity = new WeakReference<>(activity);
+            this.description = description;
+            this.amount = amount;
+            this.category = category;
+            this.date = date;
+        }
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            BillDao billDao = db.billDao();
+            billDao.insertAll(new Bill(category, description, date, amount));
+            return 0;
+        }
+
+        @Override
+        protected void onPostExecute(Integer agentsCount) {
+            Activity activity = weakActivity.get();
+
+            if (activity == null) {
+                return;
+            }
+
+            if (agentsCount > 0) {
+                //2: If it already exists then prompt user
+                Toast.makeText(activity, "Agent already exists!", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(activity, "Agent does not exist! Hurray :)", Toast.LENGTH_LONG).show();
+
+            }
+        }
+    }
+
+
+    public static class GetBillsByAsync extends AsyncTask<Void, Void, Integer> {
+
+        //Prevent leak
+        private WeakReference<PieChartView> pieChartView;
+        private Date date;
+        public List<Bill> bills;
+
+        public GetBillsByAsync(PieChartView activity, Date date) {
+            pieChartView = new WeakReference<>(activity);
+            this.date = date;
+        }
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            BillDao billDao = db.billDao();
+            this.bills = billDao.getAll();
+            return 0;
+        }
+
+        @Override
+        protected void onPostExecute(Integer result) {
+            PieChartView activity = pieChartView.get();
+
+            if (activity == null) {
+                return;
+            }
+
+            if (result > 0) {
+
+            } else {
+
+                HashMap<String, Integer> categories = new HashMap<>();
+                int totalAmount = 0;
+                for (Bill bill: bills) {
+                    totalAmount += bill.amount;
+                    if(!categories.containsKey(bill.category))
+                         categories.put(bill.category, bill.amount);
+                    else {
+                        int amount = categories.get(bill.category) + bill.amount;
+                        categories.remove(bill.category);
+                        categories.put(bill.category, amount);
+                    }
+                }
+
+                List<SliceValue> pieData = new ArrayList<>();
+                for (String category: categories.keySet()) {
+                    Random rand = new Random();
+                    int r = rand.nextInt(255);
+                    int g = rand.nextInt(255);
+                    int b = rand.nextInt(255);
+                    pieData.add(new SliceValue((categories.get(category)*100)/totalAmount, Color.rgb(r,g,b)).setLabel(category + ": " + categories.get(category)));
+                }
+
+                PieChartData pieChartData = new PieChartData(pieData);
+                pieChartData.setHasLabels(true);
+                pieChartData.setHasLabels(true).setValueLabelTextSize(14);
+                pieChartData.setHasCenterCircle(true).setCenterText1("Total: " + totalAmount).setCenterText1FontSize(40).setCenterText1Color(Color.parseColor("#0097A7"));
+
+                activity.setPieChartData(pieChartData);
+
+            }
+        }
     }
 }

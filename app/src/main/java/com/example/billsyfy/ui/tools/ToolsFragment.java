@@ -16,10 +16,17 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
+import androidx.room.Room;
 
+import com.example.billsyfy.MainActivity;
 import com.example.billsyfy.R;
+import com.example.billsyfy.entities.AppDatabase;
 import com.example.billsyfy.entities.Bill;
+import com.example.billsyfy.entities.BillDao;
 import com.example.billsyfy.ui.gallery.GalleryFragment;
+
+import java.util.Date;
+import java.util.List;
 
 public class ToolsFragment extends Fragment {
 
@@ -49,6 +56,12 @@ public class ToolsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Bill bill = new Bill();
+                bill.amount = 1000;
+                bill.category = "GENERAK";
+                bill.date = new Date();
+                bill.description = "some nice description";
+
+                new MainActivity.BillsInsertAsync(getActivity(), bill.category, bill.description, bill.amount, bill.date).execute();
                 Navigation.findNavController(view).navigate(R.id.nav_home);
             }
         });
