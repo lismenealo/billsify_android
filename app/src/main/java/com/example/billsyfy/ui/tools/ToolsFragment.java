@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,7 +37,7 @@ public class ToolsFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         toolsViewModel =
                 ViewModelProviders.of(this).get(ToolsViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_tools, container, false);
+        final View root = inflater.inflate(R.layout.fragment_tools, container, false);
 
         final ImageView imageView = root.findViewById(R.id.bill_scanned);
         Bitmap myBitmap = BitmapFactory.decodeFile(GalleryFragment.filePath);
@@ -56,12 +57,13 @@ public class ToolsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Bill bill = new Bill();
-                bill.amount = 1000;
-                bill.category = "GENERAK";
+                bill.amount =  Integer.parseInt((((EditText)root.findViewById(R.id.amount)).getText().toString()));
+                bill.category = (((EditText)root.findViewById(R.id.category)).getText().toString());
                 bill.date = new Date();
-                bill.description = "some nice description";
+                bill.description = (((EditText)root.findViewById(R.id.description)).getText().toString());
+                bill.imageFilePath = GalleryFragment.filePath;
 
-                new MainActivity.BillsInsertAsync(getActivity(), bill.category, bill.description, bill.amount, bill.date).execute();
+                new MainActivity.BillsInsertAsync(getActivity(), bill).execute();
                 Navigation.findNavController(view).navigate(R.id.nav_home);
             }
         });

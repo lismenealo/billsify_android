@@ -22,6 +22,9 @@ public class Bill {
     @ColumnInfo(name = "category")
     public String category;
 
+    @ColumnInfo(name = "imageFilePath")
+    public String imageFilePath;
+
     @ColumnInfo(name = "amount")
     public int amount;
 

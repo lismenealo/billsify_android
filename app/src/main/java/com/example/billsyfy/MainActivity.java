@@ -92,23 +92,17 @@ public class MainActivity extends AppCompatActivity {
 
         //Prevent leak
         private WeakReference<Activity> weakActivity;
-        private Date date;
-        private String description;
-        private String category;
-        private int amount;
+        private Bill bill;
 
-        public BillsInsertAsync(Activity activity, String category, String description, int amount, Date date) {
+        public BillsInsertAsync(Activity activity, Bill bill) {
             weakActivity = new WeakReference<>(activity);
-            this.description = description;
-            this.amount = amount;
-            this.category = category;
-            this.date = date;
+            this.bill = bill;
         }
 
         @Override
         protected Integer doInBackground(Void... params) {
             BillDao billDao = db.billDao();
-            billDao.insertAll(new Bill(category, description, date, amount));
+            billDao.insertAll(bill);
             return 0;
         }
 
@@ -122,10 +116,9 @@ public class MainActivity extends AppCompatActivity {
 
             if (agentsCount > 0) {
                 //2: If it already exists then prompt user
-                Toast.makeText(activity, "Agent already exists!", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "Bill already exists!", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(activity, "Agent does not exist! Hurray :)", Toast.LENGTH_LONG).show();
-
+                Toast.makeText(activity, "Bill created :)", Toast.LENGTH_LONG).show();
             }
         }
     }

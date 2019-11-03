@@ -77,7 +77,7 @@ public class GalleryFragment extends Fragment {
     protected CaptureRequest.Builder captureRequestBuilder;
     private Size imageDimension;
     private ImageReader imageReader;
-    public static String filePath;
+    public static String filePath = "";
     private static final int REQUEST_CAMERA_PERMISSION = 200;
     private boolean mFlashSupported;
     private Handler mBackgroundHandler;
