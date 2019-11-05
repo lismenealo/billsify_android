@@ -9,34 +9,23 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
-import androidx.room.Room;
 
 import com.example.billsyfy.MainActivity;
 import com.example.billsyfy.R;
-import com.example.billsyfy.entities.AppDatabase;
 import com.example.billsyfy.entities.Bill;
-import com.example.billsyfy.entities.BillDao;
 import com.example.billsyfy.ui.gallery.GalleryFragment;
 
 import java.util.Date;
-import java.util.List;
 
 public class ToolsFragment extends Fragment {
 
-    private ToolsViewModel toolsViewModel;
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        toolsViewModel =
-                ViewModelProviders.of(this).get(ToolsViewModel.class);
         final View root = inflater.inflate(R.layout.fragment_tools, container, false);
 
         final ImageView imageView = root.findViewById(R.id.bill_scanned);
@@ -44,7 +33,7 @@ public class ToolsFragment extends Fragment {
         imageView.setImageBitmap(myBitmap);
 
 
-        Button re_scan = (Button) root.findViewById(R.id.re_scan);
+        Button re_scan = root.findViewById(R.id.cancel);
         re_scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -52,7 +41,7 @@ public class ToolsFragment extends Fragment {
             }
         });
 
-        Button submit = (Button) root.findViewById(R.id.submit);
+        Button submit = root.findViewById(R.id.submit);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

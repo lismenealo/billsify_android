@@ -30,12 +30,17 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.bumptech.glide.Glide;
+import com.example.billsyfy.MainActivity;
 import com.example.billsyfy.R;
+import com.example.billsyfy.entities.Bill;
+import com.example.billsyfy.entities.BillDao;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 public class SlideshowFragment extends Fragment {
 
@@ -117,33 +122,33 @@ public class SlideshowFragment extends Fragment {
 
         protected String doInBackground(String... args) {
             String xml = "";
+            BillDao billDao = MainActivity.db.billDao();
+            List<Bill> bills = billDao.getAll();
 
-            String path = null;
-            String album = null;
-            String timestamp = null;
-            String countPhoto = null;
-            Uri uriExternal = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-            Uri uriInternal = android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI;
-
-
-            String[] projection = { MediaStore.MediaColumns.DATA,
-                    MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.MediaColumns.DATE_MODIFIED };
-            Cursor cursorExternal = getActivity().getContentResolver().query(uriExternal, projection, "_data IS NOT NULL) GROUP BY (bucket_display_name",
-                    null, null);
-            Cursor cursorInternal = getActivity().getContentResolver().query(uriInternal, projection, "_data IS NOT NULL) GROUP BY (bucket_display_name",
-                    null, null);
-            Cursor cursor = new MergeCursor(new Cursor[]{cursorExternal,cursorInternal});
-
-            while (cursor.moveToNext()) {
-
-                path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA));
-                album = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME));
-                timestamp = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATE_MODIFIED));
-                countPhoto = Function.getCount(getContext(), album);
-
-                albumList.add(Function.mappingInbox(album, path, timestamp, Function.converToTime(timestamp), countPhoto));
+            HashMap<String, Integer> categories = new HashMap<>();
+            HashMap<String, String> categories_imgpath = new HashMap<>();
+            HashMap<String, Date> categories_timeStamp = new HashMap<>();
+            for (Bill bill: bills) {
+                String cleanCategory = bill.category.trim().toUpperCase();
+                if(!categories.containsKey(cleanCategory)) {
+                    categories.put(cleanCategory, bill.amount);
+                    categories_imgpath.put(cleanCategory, bill.imageFilePath);
+                    categories_timeStamp.put(cleanCategory, bill.date);
+                } else {
+                    int amount = categories.get(cleanCategory) + bill.amount;
+                    categories.remove(cleanCategory);
+                    categories.put(cleanCategory, amount);
+                }
             }
-            cursor.close();
+
+            for (String category: categories.keySet()) {
+                albumList.add(Function.mappingInbox(category,
+                        categories_imgpath.get(category),
+                        categories_timeStamp.get(category).toString(),
+                        categories_timeStamp.get(category).toString(),
+                        "€" + categories.get(category).toString()));
+            }
+
             Collections.sort(albumList, new MapComparator(Function.KEY_TIMESTAMP, "dsc")); // Arranging photo album by timestamp decending
             return xml;
         }

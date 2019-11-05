@@ -159,12 +159,13 @@ public class MainActivity extends AppCompatActivity {
                 int totalAmount = 0;
                 for (Bill bill: bills) {
                     totalAmount += bill.amount;
-                    if(!categories.containsKey(bill.category))
-                         categories.put(bill.category, bill.amount);
+                    String cleanCategory = bill.category.trim().toUpperCase();
+                    if(!categories.containsKey(cleanCategory))
+                         categories.put(cleanCategory, bill.amount);
                     else {
-                        int amount = categories.get(bill.category) + bill.amount;
-                        categories.remove(bill.category);
-                        categories.put(bill.category, amount);
+                        int amount = categories.get(cleanCategory) + bill.amount;
+                        categories.remove(cleanCategory);
+                        categories.put(cleanCategory, amount);
                     }
                 }
 
