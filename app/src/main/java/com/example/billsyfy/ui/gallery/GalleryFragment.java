@@ -148,7 +148,7 @@ public class GalleryFragment extends Fragment {
                 Snackbar.make(view, "Bill Scanned", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
-                Navigation.findNavController(view).navigate(R.id.nav_tools);
+                    Navigation.findNavController(view).navigate(R.id.nav_tools);
             }
         });
 
