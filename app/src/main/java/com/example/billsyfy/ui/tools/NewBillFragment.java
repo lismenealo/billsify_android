@@ -12,24 +12,23 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 import com.example.billsyfy.MainActivity;
 import com.example.billsyfy.R;
 import com.example.billsyfy.entities.Bill;
-import com.example.billsyfy.ui.gallery.GalleryFragment;
+import com.example.billsyfy.ui.gallery.CaptureBillFragment;
 
 import java.util.Date;
 
-public class ToolsFragment extends Fragment {
+public class NewBillFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        final View root = inflater.inflate(R.layout.fragment_tools, container, false);
+        final View root = inflater.inflate(R.layout.fragment_new_bill, container, false);
 
         final ImageView imageView = root.findViewById(R.id.bill_scanned);
-        Bitmap myBitmap = BitmapFactory.decodeFile(GalleryFragment.filePath);
+        Bitmap myBitmap = BitmapFactory.decodeFile(CaptureBillFragment.filePath);
         imageView.setImageBitmap(myBitmap);
 
 
@@ -37,7 +36,7 @@ public class ToolsFragment extends Fragment {
         re_scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigation.findNavController(view).navigate(R.id.nav_gallery);
+                Navigation.findNavController(view).navigate(R.id.nav_capture_bill);
             }
         });
 
@@ -50,10 +49,10 @@ public class ToolsFragment extends Fragment {
                 bill.category = (((EditText)root.findViewById(R.id.category)).getText().toString());
                 bill.date = new Date();
                 bill.description = (((EditText)root.findViewById(R.id.description)).getText().toString());
-                bill.imageFilePath = GalleryFragment.filePath;
+                bill.imageFilePath = CaptureBillFragment.filePath;
 
                 new MainActivity.BillsInsertAsync(getActivity(), bill).execute();
-                Navigation.findNavController(view).navigate(R.id.nav_home);
+                Navigation.findNavController(view).navigate(R.id.nav_bills_brief);
             }
         });
         return root;

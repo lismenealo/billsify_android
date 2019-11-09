@@ -50,9 +50,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class GalleryFragment extends Fragment {
+public class CaptureBillFragment extends Fragment {
 
-    private GalleryViewModel galleryViewModel;
 
     private static final String TAG = "CaptureBill";
     private TextureView textureView;
@@ -125,9 +124,8 @@ public class GalleryFragment extends Fragment {
 
     public View onCreateView(@NonNull final LayoutInflater inflater,
                              final ViewGroup container, Bundle savedInstanceState) {
-        galleryViewModel =
-                ViewModelProviders.of(this).get(GalleryViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_gallery, container, false);
+
+        View root = inflater.inflate(R.layout.fragment_capture_bill, container, false);
 
         this.textureView = root.findViewById(R.id.textureView);
         assert textureView != null;
@@ -141,7 +139,7 @@ public class GalleryFragment extends Fragment {
                 Snackbar.make(view, "Bill Scanned", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
-                    Navigation.findNavController(view).navigate(R.id.nav_tools);
+                    Navigation.findNavController(view).navigate(R.id.nav_new_bill);
             }
         });
 

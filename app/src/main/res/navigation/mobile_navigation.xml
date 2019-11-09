@@ -3,41 +3,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@+id/nav_bills_brief">
 
     <fragment
-        android:id="@+id/nav_home"
-        android:name="com.example.billsyfy.ui.home.HomeFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" >
+        android:id="@+id/nav_bills_brief"
+        android:name="com.example.billsyfy.ui.home.BillsBriefFragment"
+        android:label="@string/menu_brief"
+        tools:layout="@layout/fragment_bills_brief" >
         <action
-            android:id="@+id/action_nav_home_to_nav_gallery"
-            app:destination="@id/nav_gallery" />
+            android:id="@+id/action_nav_bills_brief_to_nav_bills_gallery"
+            app:destination="@id/nav_bills_gallery" />
         <action
-            android:id="@+id/action_nav_home_to_nav_slideshow"
-            app:destination="@id/nav_slideshow" />
+            android:id="@+id/action_nav_bills_brief_to_nav_capture_bill"
+            app:destination="@id/nav_capture_bill" />
     </fragment>
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.example.billsyfy.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" >
+        android:id="@+id/nav_capture_bill"
+        android:name="com.example.billsyfy.ui.gallery.CaptureBillFragment"
+        android:label="@string/menu_capture"
+        tools:layout="@layout/fragment_capture_bill" >
         <action
-            android:id="@+id/action_nav_gallery_to_nav_tools"
-            app:destination="@id/nav_tools" />
+            android:id="@+id/action_nav_capture_bill_to_nav_new_bill"
+            app:destination="@id/nav_new_bill" />
     </fragment>
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.example.billsyfy.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_bills_gallery"
+        android:name="com.example.billsyfy.ui.slideshow.BillsGalleryFragment"
+        android:label="@string/menu_bill_gallery"
+        tools:layout="@layout/fragment_bills_gallery" />
 
     <fragment
-        android:id="@+id/nav_tools"
-        android:name="com.example.billsyfy.ui.tools.ToolsFragment"
-        android:label="@string/menu_tools"
-        tools:layout="@layout/fragment_tools" />
+        android:id="@+id/nav_new_bill"
+        android:name="com.example.billsyfy.ui.tools.NewBillFragment"
+        android:label="@string/menu_bill_form"
+        tools:layout="@layout/fragment_new_bill" />
 
 </navigation>

@@ -36,9 +36,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class SlideshowFragment extends Fragment {
-
-    private SlideshowViewModel slideshowViewModel;
+public class BillsGalleryFragment extends Fragment {
 
     static final int REQUEST_PERMISSION_KEY = 1;
     LoadAlbum loadAlbumTask;
@@ -47,9 +45,7 @@ public class SlideshowFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        slideshowViewModel =
-                ViewModelProviders.of(this).get(SlideshowViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_slideshow, container, false);
+        View root = inflater.inflate(R.layout.fragment_bills_gallery, container, false);
 
         galleryGridView = root.findViewById(R.id.galleryGridView);
 

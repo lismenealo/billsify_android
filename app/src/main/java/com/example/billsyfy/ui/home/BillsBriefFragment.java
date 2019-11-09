@@ -15,13 +15,13 @@ import com.example.billsyfy.MainActivity;
 import com.example.billsyfy.R;
 import java.util.Date;
 
-public class HomeFragment extends Fragment {
+public class BillsBriefFragment extends Fragment {
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
+        View root = inflater.inflate(R.layout.fragment_bills_brief, container, false);
 
         PieChartView pieChartView = root.findViewById(R.id.chart);
 
@@ -32,7 +32,7 @@ public class HomeFragment extends Fragment {
         captureBill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigation.findNavController(view).navigate(R.id.nav_gallery);
+                Navigation.findNavController(view).navigate(R.id.nav_capture_bill);
             }
         });
 
@@ -40,7 +40,7 @@ public class HomeFragment extends Fragment {
         slideShow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Navigation.findNavController(view).navigate(R.id.nav_slideshow);
+                Navigation.findNavController(view).navigate(R.id.nav_bills_gallery);
             }
         });
 

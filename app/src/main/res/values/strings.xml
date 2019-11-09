@@ -6,15 +6,8 @@
     <string name="nav_header_subtitle">Sort your printed bills</string>
     <string name="nav_header_desc">Navigation header</string>
 
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
-    <string name="menu_tools">Tools</string>
-    <string name="menu_share">Share</string>
-    <string name="menu_send">Send</string>
-
     <string name="menu_brief">Bills Brief</string>
     <string name="menu_capture">Capture Bill</string>
-    <string name="menu_bill_form">Bills Details</string>
+    <string name="menu_bill_form">New Bill</string>
     <string name="menu_bill_gallery">Bills Gallery</string>
 </resources>

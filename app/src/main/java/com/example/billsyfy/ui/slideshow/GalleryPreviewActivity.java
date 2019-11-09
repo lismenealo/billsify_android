@@ -18,7 +18,6 @@ public class GalleryPreviewActivity extends AppCompatActivity {
 
     ImageView GalleryPreviewImg;
     String path;
-    private SlideshowViewModel slideshowViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

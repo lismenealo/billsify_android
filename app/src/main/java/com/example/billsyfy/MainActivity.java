@@ -8,14 +8,7 @@ import android.os.Bundle;
 import com.example.billsyfy.entities.AppDatabase;
 import com.example.billsyfy.entities.Bill;
 import com.example.billsyfy.entities.BillDao;
-import com.example.billsyfy.entities.DateTypeConverter;
-import com.example.billsyfy.ui.home.HomeFragment;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
-import android.view.View;
-
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -27,9 +20,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.room.ColumnInfo;
 import androidx.room.Room;
-import androidx.room.TypeConverters;
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.view.PieChartView;
@@ -62,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
-                R.id.nav_tools)
+                R.id.nav_bills_brief, R.id.nav_bills_gallery, R.id.nav_capture_bill,
+                R.id.nav_new_bill)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
