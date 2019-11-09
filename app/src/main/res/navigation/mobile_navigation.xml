@@ -12,10 +12,16 @@
         tools:layout="@layout/fragment_bills_brief" >
         <action
             android:id="@+id/action_nav_bills_brief_to_nav_bills_gallery"
-            app:destination="@id/nav_bills_gallery" />
+            app:destination="@id/nav_bills_gallery"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
         <action
             android:id="@+id/action_nav_bills_brief_to_nav_capture_bill"
-            app:destination="@id/nav_capture_bill" />
+            app:destination="@id/nav_capture_bill"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
 
     <fragment
@@ -25,7 +31,9 @@
         tools:layout="@layout/fragment_capture_bill" >
         <action
             android:id="@+id/action_nav_capture_bill_to_nav_new_bill"
-            app:destination="@id/nav_new_bill" />
+            app:destination="@id/nav_new_bill"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
     </fragment>
 
     <fragment

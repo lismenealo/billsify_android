@@ -139,11 +139,6 @@ public class CaptureBillFragment extends Fragment {
                 Snackbar.make(view, "Bill Scanned", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
-                try {
-                    wait(1000);
-                } catch (Exception e) {
-
-                }
                     Navigation.findNavController(view).navigate(R.id.nav_new_bill);
             }
         });
