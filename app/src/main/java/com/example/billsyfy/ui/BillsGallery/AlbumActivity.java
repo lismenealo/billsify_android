@@ -1,14 +1,10 @@
-package com.example.billsyfy.ui.slideshow;
+package com.example.billsyfy.ui.BillsGallery;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.database.Cursor;
-import android.database.MergeCursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.billsyfy.MainActivity;
@@ -86,7 +83,7 @@ public class AlbumActivity extends AppCompatActivity {
             List<Bill> bills = billDao.findByCategory(album_name);
 
             for (Bill bill: bills) {
-                imageList.add(Function.mappingInbox(album_name, bill.imageFilePath, bill.date.toString(), bill.date.toString(), "€" + bill.amount));
+                imageList.add(Function.mappingInbox(album_name, bill.imageFilePath, bill.date.toString(), bill.description, "€" + bill.amount));
             }
             Collections.sort(imageList, new MapComparator(Function.KEY_TIMESTAMP, "dsc")); // Arranging photo album by timestamp decending
             return xml;
@@ -102,6 +99,10 @@ public class AlbumActivity extends AppCompatActivity {
                                         final int position, long id) {
                     Intent intent = new Intent(AlbumActivity.this, GalleryPreviewActivity.class);
                     intent.putExtra("path", imageList.get(+position).get(Function.KEY_PATH));
+                    intent.putExtra("category", imageList.get(+position).get(Function.KEY_CATEGORY));
+                    intent.putExtra("description", imageList.get(+position).get(Function.KEY_DESC));
+                    intent.putExtra("amount", imageList.get(+position).get(Function.KEY_AMOUNT));
+                    intent.putExtra("timestamp", imageList.get(+position).get(Function.KEY_TIMESTAMP));
                     startActivity(intent);
                 }
             });
@@ -132,9 +133,11 @@ class SingleAlbumAdapter extends BaseAdapter {
         if (convertView == null) {
             holder = new SingleAlbumViewHolder();
             convertView = LayoutInflater.from(activity).inflate(
-                    R.layout.single_album_row, parent, false);
+                    R.layout.album_row, parent, false);
 
             holder.galleryImage = (ImageView) convertView.findViewById(R.id.galleryImage);
+            holder.gallery_count = (TextView) convertView.findViewById(R.id.gallery_count);
+            holder.gallery_title = (TextView) convertView.findViewById(R.id.gallery_title);
 
             convertView.setTag(holder);
         } else {
@@ -145,6 +148,8 @@ class SingleAlbumAdapter extends BaseAdapter {
         HashMap < String, String > song = new HashMap < String, String > ();
         song = data.get(position);
         try {
+            holder.gallery_title.setText(song.get(Function.KEY_DESC));
+            holder.gallery_count.setText(song.get(Function.KEY_AMOUNT));
 
             Glide.with(activity)
                     .load(new File(song.get(Function.KEY_PATH))) // Uri of the picture
@@ -159,4 +164,5 @@ class SingleAlbumAdapter extends BaseAdapter {
 
 class SingleAlbumViewHolder {
     ImageView galleryImage;
+    TextView gallery_count, gallery_title;
 }

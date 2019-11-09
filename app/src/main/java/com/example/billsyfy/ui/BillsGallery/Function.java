@@ -1,4 +1,4 @@
-package com.example.billsyfy.ui.slideshow;
+package com.example.billsyfy.ui.BillsGallery;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -24,11 +24,11 @@ import androidx.core.app.ActivityCompat;
 public class Function {
 
 
-    static final String KEY_ALBUM = "album_name";
+    static final String KEY_CATEGORY = "category";
     static final String KEY_PATH = "path";
     static final String KEY_TIMESTAMP = "timestamp";
-    static final String KEY_TIME = "date";
-    static final String KEY_COUNT = "date";
+    static final String KEY_DESC = "description";
+    static final String KEY_AMOUNT = "amount";
 
 
     public static  boolean hasPermissions(Context context, String... permissions) {
@@ -43,14 +43,14 @@ public class Function {
     }
 
 
-    public static HashMap<String, String> mappingInbox(String album, String path, String timestamp, String time, String count)
+    public static HashMap<String, String> mappingInbox(String category, String path, String timestamp, String description, String amount)
     {
         HashMap<String, String> map = new HashMap<String, String>();
-        map.put(KEY_ALBUM, album);
+        map.put(KEY_CATEGORY, category);
         map.put(KEY_PATH, path);
         map.put(KEY_TIMESTAMP, timestamp);
-        map.put(KEY_TIME, time);
-        map.put(KEY_COUNT, count);
+        map.put(KEY_DESC, description);
+        map.put(KEY_AMOUNT, amount);
         return map;
     }
 

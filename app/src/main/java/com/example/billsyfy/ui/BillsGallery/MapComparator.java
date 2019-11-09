@@ -1,4 +1,4 @@
-package com.example.billsyfy.ui.slideshow;
+package com.example.billsyfy.ui.BillsGallery;
 
 /**
  * Created by SHAJIB on 7/16/2017.

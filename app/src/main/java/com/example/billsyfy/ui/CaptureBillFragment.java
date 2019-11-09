@@ -1,4 +1,4 @@
-package com.example.billsyfy.ui.gallery;
+package com.example.billsyfy.ui;
 
 import android.Manifest;
 import android.content.Context;
@@ -139,6 +139,11 @@ public class CaptureBillFragment extends Fragment {
                 Snackbar.make(view, "Bill Scanned", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
+                try {
+                    wait(1000);
+                } catch (Exception e) {
+
+                }
                     Navigation.findNavController(view).navigate(R.id.nav_new_bill);
             }
         });
@@ -196,7 +201,6 @@ public class CaptureBillFragment extends Fragment {
         Log.e(TAG, "openCamera X");
     }
 
-
     protected void updatePreview() {
         if(null == cameraDevice) {
             Log.e(TAG, "updatePreview error, return");
@@ -219,7 +223,6 @@ public class CaptureBillFragment extends Fragment {
             imageReader = null;
         }
     }
-
 
     protected void takePicture() {
         if(null == cameraDevice) {

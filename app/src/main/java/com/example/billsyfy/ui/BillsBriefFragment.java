@@ -1,4 +1,4 @@
-package com.example.billsyfy.ui.home;
+package com.example.billsyfy.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

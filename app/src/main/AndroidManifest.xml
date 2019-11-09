@@ -23,10 +23,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.slideshow.AlbumActivity"
+        <activity android:name=".ui.BillsGallery.AlbumActivity"
             android:configChanges="orientation|screenSize"/>
 
-        <activity android:name=".ui.slideshow.GalleryPreviewActivity"
+        <activity android:name=".ui.BillsGallery.GalleryPreviewActivity"
             android:configChanges="orientation|screenSize"/>
     </application>
 

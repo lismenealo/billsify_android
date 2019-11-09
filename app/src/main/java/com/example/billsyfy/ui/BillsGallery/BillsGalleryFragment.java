@@ -1,4 +1,4 @@
-package com.example.billsyfy.ui.slideshow;
+package com.example.billsyfy.ui.BillsGallery;
 
 import android.Manifest;
 import android.app.Activity;
@@ -21,7 +21,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.bumptech.glide.Glide;
 import com.example.billsyfy.MainActivity;
@@ -152,7 +151,7 @@ public class BillsGalleryFragment extends Fragment {
                 public void onItemClick(AdapterView<?> parent, View view,
                                         final int position, long id) {
                     Intent intent = new Intent(getActivity(), AlbumActivity.class);
-                    intent.putExtra("name", albumList.get(+position).get(Function.KEY_ALBUM));
+                    intent.putExtra("name", albumList.get(+position).get(Function.KEY_CATEGORY));
                     startActivity(intent);
                 }
             });
@@ -198,8 +197,8 @@ class AlbumAdapter extends BaseAdapter {
         HashMap < String, String > song = new HashMap < String, String > ();
         song = data.get(position);
         try {
-            holder.gallery_title.setText(song.get(Function.KEY_ALBUM));
-            holder.gallery_count.setText(song.get(Function.KEY_COUNT));
+            holder.gallery_title.setText(song.get(Function.KEY_CATEGORY));
+            holder.gallery_count.setText(song.get(Function.KEY_AMOUNT));
 
             Glide.with(activity)
                     .load(new File(song.get(Function.KEY_PATH))) // Uri of the picture
