@@ -4,6 +4,7 @@ import java.util.Date;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
@@ -35,6 +36,7 @@ public class Bill {
         this.description = description;
     }
 
+    @Ignore
     public Bill(){
         this.date = new Date();
         this.amount = 0;
