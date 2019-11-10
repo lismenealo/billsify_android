@@ -47,5 +47,9 @@
         android:name="com.example.billsyfy.ui.NewBillFragment"
         android:label="@string/menu_bill_form"
         tools:layout="@layout/fragment_new_bill" />
+    <activity
+        android:id="@+id/splashScreenActivity"
+        android:name="com.example.billsyfy.SplashScreenActivity"
+        android:label="SplashScreenActivity" />
 
 </navigation>
