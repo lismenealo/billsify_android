@@ -3,7 +3,7 @@ import java.util.Date;
 
 import androidx.room.TypeConverter;
 
-// example converter for java.util.Date
+// Converter for java.util.Date, to be able to persist dates in the DB
 public class DateTypeConverter {
     @TypeConverter
     public Date fromTimestamp(Long value) {

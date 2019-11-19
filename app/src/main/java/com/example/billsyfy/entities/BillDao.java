@@ -7,6 +7,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
+//Create Data Access object with queries needed
 @Dao
 public interface BillDao {
     @Query("SELECT * FROM bill")

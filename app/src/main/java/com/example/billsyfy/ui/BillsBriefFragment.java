@@ -23,11 +23,14 @@ public class BillsBriefFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_bills_brief, container, false);
 
+        //Get pieChartView
         PieChartView pieChartView = root.findViewById(R.id.chart);
 
+        //Call async fetch for all bills in db, pass on pieChart to update
         MainActivity.GetBillsByAsync getBillsByAsync = new MainActivity.GetBillsByAsync(pieChartView, new Date());
         getBillsByAsync.execute();
 
+        //Subscribe to click event and perform navigation to capture bill
         Button captureBill = root.findViewById(R.id.capture_bill);
         captureBill.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,6 +39,7 @@ public class BillsBriefFragment extends Fragment {
             }
         });
 
+        //Subscribe to click event and perform navigation to bills gallery
         Button slideShow = root.findViewById(R.id.shoow_all);
         slideShow.setOnClickListener(new View.OnClickListener() {
             @Override

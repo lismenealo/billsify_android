@@ -35,6 +35,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * In this activity is handle the DB and the creation of the navigation controls
+ * <p>Regarding db handling:
+ * <ul>
+ *  <li>Inset into the DB  a {@link Bill}
+ *  <li>And retrieve a list of {@link Bill} to create the {@link PieChartView}
+ *  <li>All the DB operations are performed async using {@link AsyncTask}
+ * </ul>
+ */
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
@@ -50,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -57,10 +67,12 @@ public class MainActivity extends AppCompatActivity {
                 R.id.nav_new_bill)
                 .setDrawerLayout(drawer)
                 .build();
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        //Instantiate database on start mainActivity
         this.db = Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class, "billsify").build();
     }
@@ -78,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
+    //Create asyncrounous job separate from main thread to perform insertion
     public static class BillsInsertAsync extends AsyncTask<Void, Void, Integer> {
 
         //Prevent leak
@@ -89,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
             this.bill = bill;
         }
 
+        //Put the code to be executed on background thread
         @Override
         protected Integer doInBackground(Void... params) {
             BillDao billDao = db.billDao();
@@ -96,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
             return 0;
         }
 
+        //After execution perform notifications
         @Override
         protected void onPostExecute(Integer agentsCount) {
             Activity activity = weakActivity.get();
@@ -114,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    //Create job to be execute away from main thread
     public static class GetBillsByAsync extends AsyncTask<Void, Void, Integer> {
 
         //Prevent leak
@@ -126,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
             this.date = date;
         }
 
+        //Get all bills
         @Override
         protected Integer doInBackground(Void... params) {
             BillDao billDao = db.billDao();
@@ -133,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
             return 0;
         }
 
+        //After execution pieChartView as intended from call
         @Override
         protected void onPostExecute(Integer result) {
             PieChartView activity = pieChartView.get();
@@ -144,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
             if (result > 0) {
 
             } else {
-
+                //From bills group by categories and retrieve sum of amount to build balance
                 HashMap<String, Integer> categories = new HashMap<>();
                 int totalAmount = 0;
                 for (Bill bill: bills) {
@@ -159,8 +177,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
+                //Set up PieChartData
                 List<SliceValue> pieData = new ArrayList<>();
                 for (String category: categories.keySet()) {
+
+                    //Create random colors for categories
                     Random rand = new Random();
                     int r = rand.nextInt(255);
                     int g = rand.nextInt(255);
@@ -169,12 +190,13 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 PieChartData pieChartData = new PieChartData(pieData);
+
+                //Customize pieChart
                 pieChartData.setHasLabels(true);
                 pieChartData.setHasLabels(true).setValueLabelTextSize(14);
                 pieChartData.setHasCenterCircle(true).setCenterText1("Total: " + totalAmount).setCenterText1FontSize(40).setCenterText1Color(Color.parseColor("#0097A7"));
 
                 activity.setPieChartData(pieChartData);
-
             }
         }
     }

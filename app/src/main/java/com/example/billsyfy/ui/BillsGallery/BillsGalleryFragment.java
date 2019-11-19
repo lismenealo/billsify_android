@@ -35,6 +35,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+//Class and view that handle the a all category albums
 public class BillsGalleryFragment extends Fragment {
 
     static final int REQUEST_PERMISSION_KEY = 1;
@@ -48,6 +49,7 @@ public class BillsGalleryFragment extends Fragment {
 
         galleryGridView = root.findViewById(R.id.galleryGridView);
 
+        //Get display details to tuned he visualization in gridView
         int iDisplayWidth = getResources().getDisplayMetrics().widthPixels ;
         Resources resources = getContext().getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
@@ -56,12 +58,13 @@ public class BillsGalleryFragment extends Fragment {
         if(dp < 360)
         {
             dp = (dp - 17) / 2;
-            float px = Function.convertDpToPixel(dp, getContext());
+            float px = Helper.convertDpToPixel(dp, getContext());
             galleryGridView.setColumnWidth(Math.round(px));
         }
 
+        //Request persmission if no granted yet
         String[] PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
-        if(!Function.hasPermissions(getContext(), PERMISSIONS)){
+        if(!Helper.hasPermissions(getContext(), PERMISSIONS)){
             ActivityCompat.requestPermissions(getActivity(), PERMISSIONS, REQUEST_PERMISSION_KEY);
         }
         return root;
@@ -70,6 +73,8 @@ public class BillsGalleryFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        //Set request permissions and LoadAlbum if granted
         switch (requestCode)
         {
             case REQUEST_PERMISSION_KEY: {
@@ -91,8 +96,9 @@ public class BillsGalleryFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        //Set request permissions and LoadAlbum
         String[] PERMISSIONS = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
-        if(!Function.hasPermissions(getContext(), PERMISSIONS)){
+        if(!Helper.hasPermissions(getContext(), PERMISSIONS)){
             ActivityCompat.requestPermissions(getActivity(), PERMISSIONS, REQUEST_PERMISSION_KEY);
         }else{
             loadAlbumTask = new LoadAlbum();
@@ -102,6 +108,7 @@ public class BillsGalleryFragment extends Fragment {
     }
 
 
+    //Again create asyn job to load images on background
     class LoadAlbum extends AsyncTask<String, Void, String> {
         @Override
         protected void onPreExecute() {
@@ -109,6 +116,7 @@ public class BillsGalleryFragment extends Fragment {
             albumList.clear();
         }
 
+        //Retrieve bills information and build album collection
         protected String doInBackground(String... args) {
             String xml = "";
             BillDao billDao = MainActivity.db.billDao();
@@ -131,27 +139,28 @@ public class BillsGalleryFragment extends Fragment {
             }
 
             for (String category: categories.keySet()) {
-                albumList.add(Function.mappingInbox(category,
+                albumList.add(Helper.mappingInbox(category,
                         categories_imgpath.get(category),
                         categories_timeStamp.get(category).toString(),
                         categories_timeStamp.get(category).toString(),
                         "€" + categories.get(category).toString()));
             }
 
-            Collections.sort(albumList, new MapComparator(Function.KEY_TIMESTAMP, "dsc")); // Arranging photo album by timestamp decending
+            Collections.sort(albumList, new MapComparator(Helper.KEY_TIMESTAMP, "dsc")); // Arranging photo album by timestamp decending
             return xml;
         }
 
         @Override
         protected void onPostExecute(String xml) {
-
+            //Create a set album adapter to handle collection
             AlbumAdapter adapter = new AlbumAdapter(getActivity(), albumList);
             galleryGridView.setAdapter(adapter);
+            //subscribe to click event to retrieve image on call
             galleryGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View view,
                                         final int position, long id) {
                     Intent intent = new Intent(getActivity(), AlbumActivity.class);
-                    intent.putExtra("name", albumList.get(+position).get(Function.KEY_CATEGORY));
+                    intent.putExtra("name", albumList.get(+position).get(Helper.KEY_CATEGORY));
                     startActivity(intent);
                 }
             });
@@ -159,6 +168,7 @@ public class BillsGalleryFragment extends Fragment {
     }
 }
 
+//Album Adapter to handle collection in view
 class AlbumAdapter extends BaseAdapter {
     private Activity activity;
     private ArrayList<HashMap< String, String >> data;
@@ -175,8 +185,11 @@ class AlbumAdapter extends BaseAdapter {
     public long getItemId(int position) {
         return position;
     }
+
+    //Set data on album of bill category preview
     public View getView(int position, View convertView, ViewGroup parent) {
         AlbumViewHolder holder = null;
+        //Retrieve view object to set fields values
         if (convertView == null) {
             holder = new AlbumViewHolder();
             convertView = LayoutInflater.from(activity).inflate(
@@ -197,11 +210,12 @@ class AlbumAdapter extends BaseAdapter {
         HashMap < String, String > song = new HashMap < String, String > ();
         song = data.get(position);
         try {
-            holder.gallery_title.setText(song.get(Function.KEY_CATEGORY));
-            holder.gallery_count.setText(song.get(Function.KEY_AMOUNT));
+            holder.gallery_title.setText(song.get(Helper.KEY_CATEGORY));
+            holder.gallery_count.setText(song.get(Helper.KEY_AMOUNT));
 
+            //load sample image for category
             Glide.with(activity)
-                    .load(new File(song.get(Function.KEY_PATH))) // Uri of the picture
+                    .load(new File(song.get(Helper.KEY_PATH))) // Uri of the picture
                     .into(holder.galleryImage);
 
 
@@ -210,6 +224,7 @@ class AlbumAdapter extends BaseAdapter {
     }
 }
 
+//Helper object to store album category data
 class AlbumViewHolder {
     ImageView galleryImage;
     TextView gallery_count, gallery_title;

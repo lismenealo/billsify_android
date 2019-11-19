@@ -9,6 +9,7 @@ import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 @Entity
+//Creating Bill entity using entity manager
 public class Bill {
     @PrimaryKey(autoGenerate = true)
     public int uid;

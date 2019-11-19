@@ -1,16 +1,9 @@
 package com.example.billsyfy.ui.BillsGallery;
 
-/**
- * Created by SHAJIB on 7/16/2017.
- */
-
 import java.util.Comparator;
 import java.util.HashMap;
 
-/**
- * Created by SHAJIB on 7/12/2017.
- */
-
+//Redifine comparison for string HashMap elements
 class MapComparator implements Comparator<HashMap<String, String>>
 {
     private final String key;
@@ -25,9 +18,12 @@ class MapComparator implements Comparator<HashMap<String, String>>
     public int compare(HashMap<String, String> first,
                        HashMap<String, String> second)
     {
-        // TODO: Null checking, both for maps and values
         String firstValue = first.get(key);
         String secondValue = second.get(key);
+
+        if(firstValue != null || secondValue != null)
+            return 0;
+
         if(this.order.toLowerCase().contentEquals("asc"))
         {
             return firstValue.compareTo(secondValue);

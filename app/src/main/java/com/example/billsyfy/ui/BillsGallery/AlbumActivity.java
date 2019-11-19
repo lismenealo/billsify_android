@@ -29,6 +29,7 @@ import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+//Class and view that handle the a single category album
 public class AlbumActivity extends AppCompatActivity {
 
     GridView galleryGridView;
@@ -37,18 +38,20 @@ public class AlbumActivity extends AppCompatActivity {
     LoadAlbumImages loadAlbumTask;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album);
 
+        //Set title view from intent information
         Intent intent = getIntent();
         album_name = intent.getStringExtra("name");
         setTitle(album_name);
 
-
         galleryGridView = (GridView) findViewById(R.id.galleryGridView);
+
+
+        //Get display details to tuned he visualization in gridView
         int iDisplayWidth = getResources().getDisplayMetrics().widthPixels ;
         Resources resources = getApplicationContext().getResources();
         DisplayMetrics metrics = resources.getDisplayMetrics();
@@ -57,18 +60,17 @@ public class AlbumActivity extends AppCompatActivity {
         if(dp < 360)
         {
             dp = (dp - 17) / 2;
-            float px = Function.convertDpToPixel(dp, getApplicationContext());
+            float px = Helper.convertDpToPixel(dp, getApplicationContext());
             galleryGridView.setColumnWidth(Math.round(px));
         }
 
-
+        //LoadAlbum information from bill table
         loadAlbumTask = new LoadAlbumImages();
         loadAlbumTask.execute();
-
-
     }
 
 
+    //Again create asyn job to load images on background
     class LoadAlbumImages extends AsyncTask<String, Void, String> {
         @Override
         protected void onPreExecute() {
@@ -76,6 +78,7 @@ public class AlbumActivity extends AppCompatActivity {
             imageList.clear();
         }
 
+        //Retrieve bills information and build category collection
         protected String doInBackground(String... args) {
             String xml = "";
 
@@ -83,26 +86,27 @@ public class AlbumActivity extends AppCompatActivity {
             List<Bill> bills = billDao.findByCategory(album_name);
 
             for (Bill bill: bills) {
-                imageList.add(Function.mappingInbox(album_name, bill.imageFilePath, bill.date.toString(), bill.description, "€" + bill.amount));
+                imageList.add(Helper.mappingInbox(album_name, bill.imageFilePath, bill.date.toString(), bill.description, "€" + bill.amount));
             }
-            Collections.sort(imageList, new MapComparator(Function.KEY_TIMESTAMP, "dsc")); // Arranging photo album by timestamp decending
+            Collections.sort(imageList, new MapComparator(Helper.KEY_TIMESTAMP, "dsc")); // Arranging photo album by timestamp decending
             return xml;
         }
 
         @Override
         protected void onPostExecute(String xml) {
-
+            //Create and CategoryAdapter
             SingleAlbumAdapter adapter = new SingleAlbumAdapter(AlbumActivity.this, imageList);
             galleryGridView.setAdapter(adapter);
+            //Subscribe for click event and navigate to zoom preview of bill passing all bills details with it
             galleryGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View view,
                                         final int position, long id) {
                     Intent intent = new Intent(AlbumActivity.this, GalleryPreviewActivity.class);
-                    intent.putExtra("path", imageList.get(+position).get(Function.KEY_PATH));
-                    intent.putExtra("category", imageList.get(+position).get(Function.KEY_CATEGORY));
-                    intent.putExtra("description", imageList.get(+position).get(Function.KEY_DESC));
-                    intent.putExtra("amount", imageList.get(+position).get(Function.KEY_AMOUNT));
-                    intent.putExtra("timestamp", imageList.get(+position).get(Function.KEY_TIMESTAMP));
+                    intent.putExtra("path", imageList.get(+position).get(Helper.KEY_PATH));
+                    intent.putExtra("category", imageList.get(+position).get(Helper.KEY_CATEGORY));
+                    intent.putExtra("description", imageList.get(+position).get(Helper.KEY_DESC));
+                    intent.putExtra("amount", imageList.get(+position).get(Helper.KEY_AMOUNT));
+                    intent.putExtra("timestamp", imageList.get(+position).get(Helper.KEY_TIMESTAMP));
                     startActivity(intent);
                 }
             });
@@ -110,7 +114,7 @@ public class AlbumActivity extends AppCompatActivity {
     }
 }
 
-
+//Album Adapter to handle collection in view
 class SingleAlbumAdapter extends BaseAdapter {
     private Activity activity;
     private ArrayList<HashMap< String, String >> data;
@@ -128,9 +132,12 @@ class SingleAlbumAdapter extends BaseAdapter {
         return position;
     }
 
+    //Set data on album of bill preview
     public View getView(int position, View convertView, ViewGroup parent) {
         SingleAlbumViewHolder holder = null;
         if (convertView == null) {
+
+            //Retrieve view object to set fields values
             holder = new SingleAlbumViewHolder();
             convertView = LayoutInflater.from(activity).inflate(
                     R.layout.album_row, parent, false);
@@ -148,11 +155,12 @@ class SingleAlbumAdapter extends BaseAdapter {
         HashMap < String, String > song = new HashMap < String, String > ();
         song = data.get(position);
         try {
-            holder.gallery_title.setText(song.get(Function.KEY_DESC));
-            holder.gallery_count.setText(song.get(Function.KEY_AMOUNT));
+            holder.gallery_title.setText(song.get(Helper.KEY_DESC));
+            holder.gallery_count.setText(song.get(Helper.KEY_AMOUNT));
 
+            //load sample image for bill
             Glide.with(activity)
-                    .load(new File(song.get(Function.KEY_PATH))) // Uri of the picture
+                    .load(new File(song.get(Helper.KEY_PATH))) // Uri of the picture
                     .into(holder.galleryImage);
 
 
@@ -161,7 +169,7 @@ class SingleAlbumAdapter extends BaseAdapter {
     }
 }
 
-
+//Helper object to store bill detials on view album
 class SingleAlbumViewHolder {
     ImageView galleryImage;
     TextView gallery_count, gallery_title;
